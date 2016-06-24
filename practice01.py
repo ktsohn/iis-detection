@@ -1,19 +1,25 @@
+##Practice with .csv
+'''
+Reading .csv and getting data
+-specific time and channel
+-make smaller test .csv files
+'''
+
 import os
-os.chdir("/Volumes/KINGSTON/")
+os.chdir("/Volumes/KINGSTON/Coding/")
 
-def convert_time(hour, min, sec, milisec):
-    '''(int, int, int, int) -> float
-    Return time converted into single float'''
-    
-    time = (3600*hour) + (60*min) + sec + (0.001*milisec)
-    return time
+#def convert_time(hour, min, sec, milisec):
+#    '''(int, int, int, int) -> float
+#    Return time converted into single float'''
+#    
+#    time = (3600*hour) + (60*min) + sec + (0.001*milisec)
+#    return time
 
-##Work on getting rid of \n - did it with .rstrip
-def get_values_time(filename, time):
+def get_values_time(data_file, time):
     '''(str, float) -> dict{str:float}
     Return values for time specified'''
 
-    f = open(filename)
+    f = open(data_file)
     first_line = f.readline()
     channels = first_line.split("-Ref,")
     channels[-1] = channels[-1].rstrip("-Ref\n")
@@ -34,13 +40,13 @@ def get_values_time(filename, time):
 
 get_values_time("file01.csv", 28649.046)
 
-def get_values_channel(filename, channel, start_time, end_time):
+def get_values_channel(data_file, channel, start_time, end_time):
     '''(str, str, float, float) -> dict{float:float}
     Return values for channel and time frame specified
     Include both start_time and end_time
     Works for a single time (enter same time for start_time and end_time'''
     
-    f = open(filename)
+    f = open(data_file)
     first_line = f.readline()
     time_and_channels = first_line.split("-Ref,")
     dict = {}

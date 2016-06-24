@@ -1,33 +1,48 @@
-##Practice using .txt files
+##Practice with .txt
+'''
+Reading .txt, getting data, and modifying file
+-use .txt as a collection of all the iis times
+-formatting needed?
+'''
 
 import os
-os.chdir("/Volumes/KINGSTON/")
+os.chdir("/Volumes/KINGSTON/Coding/")
 
-def get_times(filename, size):
+def get_times(time_file):
+    '''string -> list
+    time_file: name of file that contains the timestamps
+    Return list of time listed in "time_file", but as one float each'''
+    
     list_of_times = []
-    f=open(filename)
-    first = f.readline()
-    for i in range(size):
+    f=open(time_file)
+    line = f.readline()
+    while line != None:
         line = f.readline()
         components = line.split(":")
         time = float((int(components[0]) * 86400) + (int(components[1]) * 3600) + \
         (int(components[2]) * 60) + float(components[3]))
         list_of_times.append(time)
-    print(list_of_times)
     return list_of_times
 
-def append_times(filename, time):
+def append_times(time_file, time):
+    '''(string, float) -> 
+    time_file: name of the file that contains the timestamps
+    time: the time in float that will be appended to "time_file"
+    Modify "time_file" and do not return anything'''
+    
     day = int(time//86400)
     time -= (day * 86400)
     hour = int(time//3600)
     time -= (hour * 3600)
     min = int(time//60)
     time -= (min * 60)
-    sec = float(time)
-    with open(filename, "a") as f:
-        f.write(str(day) + ":" + str(hour) + ":" + str(min) + ":" + str(sec) + "\n")
-    print(str(day) + ":" + str(hour) + ":" + str(min) + ":" + str(sec) + "\n")
+    sec = format(time, ".3f")
+    newline = str(day) + ":" + str(hour) + ":" + str(min) + ":" + sec + "\n"
+    with open(time_file, "a") as f:
+        f.write(newline)
+    print(newline)
 
 
 get_times("test_times.txt", 3)
 append_times("test_times.txt", 90061.1)
+append_times("test_times.txt", 0.005)
