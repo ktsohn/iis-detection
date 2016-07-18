@@ -27,6 +27,7 @@ def select_channel(data_file, channel):
     first_line = f.readline()
     time_and_channels = first_line.split("-Ref,")
     time_and_channels[-1] = time_and_channels[-1].rstrip("-Ref\n")
+    i = 0
     for i in range(len(time_and_channels)):
         if time_and_channels[i] == channel:
             return i
@@ -39,22 +40,21 @@ def select_sample(data_file, index, start_time, n):
     n: number of points per window (window * frequency)
     
     Return values for channel and time frame specified
-    Include start_time and end 300ms (75 samples) later'''
+    Include start_time and end 300ms (n samples) later'''
     
     f = open(data_file)
     first_line = f.readline()
     line = f.readline()
-    currtime = float((line.split(","))[0])
+    currtime = float(line.split(",")[0])
     if currtime > start_time:
         start_time += 86400
     while currtime != start_time:
         line = f.readline()
-        currtime = float((line.split(","))[0])
+        currtime = float(line.split(",")[0])
     window = []
     for i in range(n):
-        window.append = float((line.split(","))[index])
+        window.append(float(line.split(",")[index]))
         line = f.readline()
-    
     return window
 
 #def average_windows(w0, w1, w2, w3, w4, w5, w6, w7, w8, w9):
@@ -68,37 +68,37 @@ def select_sample(data_file, index, start_time, n):
 #    return avg
 
 
-def make_sample_spike_manual(data_file, index, sample_number, n):
-    '''(string, string, int) -> (list)
-    data_file: name of the data file
-    index: index of channel
-    sample_number: number of hand-picked samples to be averaged
-    n: number of points per window (window * frequency)
-    
-    Use
-    convert_time
-    select_sample
-    
-    Input time
-    Make dictionary of sample_number spikes
-    Return list containing an average = sample_spike'''
-    
-    spikes = {}
-    sample_spike = []
-    for i in range(sample_number):
-        print("Spike number %d\n", n)
-        h = int(input("hour: "))
-        m = int(input("minute: "))
-        s = float(input("second: "))
-        spikes[i] = select_sample(data_file, index, convert_time(h, m, s))
-    for j in range(n):
-        avg = 0
-        for keys in spikes:
-            avg += spikes[keys][j]
-        sample_spike[j] = avg/float(sample_number)
-    return sample_spike
+#def make_sample_spike_manual(data_file, index, sample_number, n):
+#    '''(string, string, int) -> (list)
+#    data_file: name of the data file
+#    index: index of channel
+#    sample_number: number of hand-picked samples to be averaged
+#    n: number of points per window (window * frequency)
+#    
+#    Use
+#    convert_time
+#    select_sample
+#   
+#    Input time
+#    Make dictionary of sample_number spikes
+#    Return list containing an average = sample_spike'''
+#    
+#    spikes = {}
+#    sample_spike = []
+#    for i in range(sample_number):
+#        print("Spike number %d\n", n)
+#        h = int(input("hour: "))
+#        m = int(input("minute: "))
+#        s = float(input("second: "))
+#        spikes[i] = select_sample(data_file, index, convert_time(h, m, s))
+#    for j in range(n):
+#        avg = 0
+#        for keys in spikes:
+#            avg += spikes[keys][j]
+#        sample_spike[j] = avg/float(sample_number)
+#    return sample_spike
 
-def make_sample_spike(data_file, index, time_file, sample_number, n):
+def make_sample_spike(data_file, index, time_file, sample_number, n): #PART 1
     '''(string, string, int) -> (list)
     data_file: name of the data file
     index: index of channel
@@ -108,6 +108,7 @@ def make_sample_spike(data_file, index, time_file, sample_number, n):
     
     Use
     select_sample
+    get_times
     
     Make dictionary of sample_number spikes
     Return list containing an average'''
@@ -115,11 +116,12 @@ def make_sample_spike(data_file, index, time_file, sample_number, n):
     spikes = {}
     sample_spike = []
     time_list = get_times(time_file)
+    print(time_list)
     for time in time_list:
-        spikes[time] = select_sample(data_file, index, time)
+        spikes[time] = select_sample(data_file, index, time, n)
     for j in range(n):
         avg = 0
         for keys in spikes:
             avg += spikes[keys][j]
-        sample_spike[j] = avg/float(sample_number)
+        sample_spike.append(avg/float(sample_number))
     return sample_spike
