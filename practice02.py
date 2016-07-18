@@ -8,20 +8,20 @@ Reading .txt, getting data, and modifying file
 import os
 os.chdir("/Volumes/KINGSTON/Coding/")
 
-def get_times(time_file):
+def get_times(time_file): #PRACTICE2
     '''string -> list
     time_file: name of file that contains the timestamps
     Return list of time listed in "time_file", but as one float each'''
     
     list_of_times = []
     f=open(time_file)
-    line = f.readline()
-    while line != None:
-        line = f.readline()
+    line = f.readline() #careful with titles in files
+    while line != "":
         components = line.split(":")
-        time = float((int(components[0]) * 86400) + (int(components[1]) * 3600) + \
-        (int(components[2]) * 60) + float(components[3]))
+        time = float(int(components[0]) * 86400) + (int(components[1]) * 3600) + \
+        (int(components[2]) * 60) + float(components[3]) #careful with day number
         list_of_times.append(time)
+        line = f.readline()
     return list_of_times
 
 def append_times(time_file, time):
